@@ -1,4 +1,5 @@
 import express from "express";
+import errorHandler from "./middlewares/errorHandler.middleware";
 
 //* express app
 const app = express();
@@ -18,5 +19,8 @@ app.use("/", (req, res) => {
 //* using routes
 
 //* path not found
+
+//* error handler
+app.use(errorHandler);
 
 export default app;
