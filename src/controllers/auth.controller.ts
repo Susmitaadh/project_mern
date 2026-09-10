@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import User from "../models/user.model";
 import AppError from "../utils/appError.utils";
+import { comparePassword, hashPassword } from "../utils/bcrypt.utils";
 
 //* register
 export const register = async (
@@ -9,7 +10,7 @@ export const register = async (
   next: NextFunction,
 ) => {
   try {
-    console.log(req.body);
+    // console.log(req.body);
     const { full_name, email, password, phone } = req.body;
 
     if (!full_name) {
@@ -28,17 +29,22 @@ export const register = async (
     //* user instance
     const user = new User({ full_name, email, password, phone });
 
-    //todo: hash passwowrd
+    //* hash passwowrd
+    const hash = await hashPassword(password);
+    user.password = hash;
 
     //todo: upload profile image
 
     //* save user
     await user.save();
 
+    //* convert user mongoose doc to js object
+    const { password: _, ...rest } = user.toObject();
+
     //* success response
     res.status(201).json({
       message: "Account created",
-      data: user,
+      data: rest,
       success: true,
       status: "success",
     });
@@ -48,9 +54,51 @@ export const register = async (
 };
 
 //* login
+export const login = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { email, password } = req.body;
+
+    if (!email) throw new AppError("Email is required", 400);
+
+    if (!password) throw new AppError("Password is required", 400);
+
+    //* find user by email
+    const user = await User.findOne({ email });
+
+    //* if !user throw error
+    if (!user) throw new AppError("Invalid email or password", 400);
+
+    //* compare password
+    const isPassMatched = await comparePassword(password, user.password);
+
+    //* if !password match throw error
+    if (!isPassMatched) throw new AppError("Invalid email or password", 400);
+
+    // todo: jwt token
+
+    //* convert user mongoose doc to js object
+    const { password: _, ...rest } = user.toObject();
+
+    //* success response
+    res.status(201).json({
+      message: "Login successful",
+      status: "success",
+      success: true,
+      data: rest,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 
 //* get profile
 
 //* change password
 
 //* forgot password
+
+
