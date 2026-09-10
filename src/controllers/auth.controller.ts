@@ -1,4 +1,4 @@
-import { NextFunction, Request } from "express";
+import { NextFunction, Request, Response } from "express";
 import User from "../models/user.model";
 
 //* register
@@ -28,6 +28,24 @@ export const register = async (
       error.status = "fail";
       error.success = false;
     }
+
+    //* user instance
+    const user = new User({ full_name, email, password, phone });
+
+    //todo: hash passwowrd
+
+    //todo: upload profile image
+
+    //* save user
+    await user.save();
+
+    //* success response
+    res.status(201).json({
+      message: "Account created",
+      data: user,
+      success: true,
+      status: "success",
+    });
   } catch (error) {
     next(error);
   }

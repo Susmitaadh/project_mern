@@ -23,6 +23,7 @@ const userSchema = new mongoose.Schema<IUserDocument>(
       type: String,
       required: [true, "Full name is required"],
       minLength: [3, "Full name must be at least 2 characters long"],
+      trim: true,
     },
     email: {
       type: String,
@@ -45,10 +46,11 @@ const userSchema = new mongoose.Schema<IUserDocument>(
     phone: {
       type: String,
       default: null,
+      trim: true,   
     },
   },
   { timestamps: true },
-);
+); 
 
 //* user model
 const User = mongoose.model<IUserDocument>("user", userSchema);
