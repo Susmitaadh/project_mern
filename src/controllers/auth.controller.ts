@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import User from "../models/user.model";
+import AppError from "../utils/appError.utils";
 
 //* register
 export const register = async (
@@ -8,26 +9,21 @@ export const register = async (
   next: NextFunction,
 ) => {
   try {
+    console.log(req.body);
     const { full_name, email, password, phone } = req.body;
 
     if (!full_name) {
-      const error: any = new Error("Full name is required");
-      error.statusCode = 400;
-      error.status = "fail";
-      error.success = false;
+      //   const error: any = new Error("Full name is required");
+      //   error.statusCode = 400;
+      //   error.status = "fail";
+      //   error.success = false;
+      //   throw error;
+      throw new AppError("Full name is required", 400);
     }
     if (!email) {
-      const error: any = new Error("Email is required");
-      error.statusCode = 400;
-      error.status = "fail";
-      error.success = false;
+      throw new AppError("Email is required", 400);
     }
-    if (!password) {
-      const error: any = new Error("Password is required");
-      error.statusCode = 400;
-      error.status = "fail";
-      error.success = false;
-    }
+    if (!password) throw new AppError("Password is required", 400);
 
     //* user instance
     const user = new User({ full_name, email, password, phone });

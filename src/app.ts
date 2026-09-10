@@ -1,14 +1,17 @@
 import express, { NextFunction, Request, Response } from "express";
 import errorHandler from "./middlewares/errorHandler.middleware";
 
+//* importing routes'
+import authRoutes from "./routes/auth.routes";
+
 //* express app
 const app = express();
 
 //* using middleware
-
+app.use(express.json());
 
 //* health route
-app.get("/", (req, res) => {
+app.get("/", (_, res) => {
   res.status(200).json({
     message: "Server is up and running",
     success: true,
@@ -18,6 +21,7 @@ app.get("/", (req, res) => {
 });
 
 //* using routes
+app.use("/api/v1/auth", authRoutes); // v1 is api version
 
 //* path not found
 app.use((req: Request, _: Response, next: NextFunction) => {
