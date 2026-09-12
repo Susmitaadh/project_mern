@@ -16,7 +16,8 @@
   "dependencies": {
     "bcryptjs": "^3.0.3",
     "express": "^5.2.1",
-    "mongoose": "^9.9.5"
+    "mongoose": "^9.9.5",
+    "zod": "^4.6.2"
   },
   "devDependencies": {
     "@types/express": "^5.0.6",
