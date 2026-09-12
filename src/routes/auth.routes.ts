@@ -1,5 +1,7 @@
 import express from "express";
-import { register } from "../controllers/auth.controller";
+import { login, register } from "../controllers/auth.controller";
+import { validate } from "../middlewares/validator.middleware";
+import { loginValidator } from "../validators/auth.validator";
 
 const router = express.Router();
 
@@ -7,6 +9,8 @@ const router = express.Router();
 router.post('/register', register);
 
 //* login
+router.post('/login', validate(loginValidator), login);
+
 
 //* change password
 
