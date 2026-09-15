@@ -23,7 +23,7 @@ export const validate = (schema: ZodObject) => {
           message,
         };
       });
-      next(new AppError("Validation error", 400, errors));
+      next(new AppError("Validation Error", 400, "VALIDATION_ERROR", errors));
     }
   };
 };

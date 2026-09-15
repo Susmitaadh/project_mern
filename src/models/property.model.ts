@@ -79,3 +79,5 @@ const propertySchema = new mongoose.Schema<TProperty>({
 
 const Property = mongoose.model<TProperty>("Property", propertySchema);
 export default Property;
+
+

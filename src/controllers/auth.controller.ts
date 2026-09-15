@@ -4,6 +4,7 @@ import AppError from "../utils/appError.utils";
 import { comparePassword, hashPassword } from "../utils/bcrypt.utils";
 import { sendResponse } from "../utils/sendResponse.utils";
 import { catachAsync } from "../utils/catchAsync.utils";
+import { generateJwtToken } from "../utils/jwt.utils";
 
 //* register
 export const register = catachAsync(async (req, res) => {
@@ -66,7 +67,12 @@ export const login = catachAsync(async (req, res) => {
   //* if !password match throw error
   if (!isPassMatched) throw new AppError("Invalid email or password", 400);
 
-  // todo: jwt token
+  //* json web token / jwt.io
+  const access_token = generateJwtToken({
+    _id: user._id,
+    email: user.email,
+    role: user.role,
+  });
 
   //* convert user mongoose doc to js object
   const { password: _, ...rest } = user.toObject();
@@ -75,7 +81,10 @@ export const login = catachAsync(async (req, res) => {
   sendResponse(res, {
     message: "Login successful",
     statusCode: 201,
-    data: rest,
+    data: {
+      user: rest,
+      access_token,
+    },
   });
 });
 

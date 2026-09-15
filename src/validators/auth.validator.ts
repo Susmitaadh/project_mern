@@ -7,7 +7,7 @@ export const loginValidator = z.object({
     password: z.string('Password must be a string.').optional(),
   }),
   //* params
-  //8 query
+  //* query
 });
 
 //* register

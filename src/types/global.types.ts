@@ -1,0 +1,7 @@
+export type TResponseCode =
+  | "SUCCESS"
+  | "VALIDATION_ERROR"
+  | "INTERNAL_SERVER_ERROR"
+  | "UNAUTHORIZED"
+  | "FORBIDDEN"
+  | "NOT_FOUND";

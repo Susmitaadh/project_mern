@@ -1,11 +1,7 @@
 import mongoose, { Document } from "mongoose";
+import { Role } from "../types/enum.types";
 
-//* enum
-enum Role {
-  ADMIN = "ADMIN",
-  USER = "USER",
-  HOST = 'HOST',
-}
+
 
 //* interface
 interface IUserDocument extends Document {
