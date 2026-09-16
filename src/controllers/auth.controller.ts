@@ -10,6 +10,8 @@ import { generateJwtToken } from "../utils/jwt.utils";
 export const register = catachAsync(async (req, res) => {
   // console.log(req.body);
   const { full_name, email, password, phone } = req.body;
+  const file = req.file;
+  console.log(file);
 
   if (!full_name) {
     //   const error: any = new Error("Full name is required");
@@ -32,6 +34,9 @@ export const register = catachAsync(async (req, res) => {
   user.password = hash;
 
   //todo: upload profile image
+  if (file) {
+    user.profile_image = file?.path;
+  }
 
   //* save user
   await user.save();
@@ -94,5 +99,3 @@ export const getProfile = catachAsync(async (req, res) => {});
 //* change password
 
 //* forgot password
-
-

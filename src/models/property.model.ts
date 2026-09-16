@@ -14,6 +14,7 @@ interface TProperty {
   host: mongoose.Types.ObjectId;
   name: string;
   description: string;
+  price: number;
   price_type: PropertyPriceType;
   address: {
     country: string;
@@ -31,17 +32,25 @@ const propertySchema = new mongoose.Schema<TProperty>({
     ref: "user",
     required: true,
   },
+
   name: {
     type: String,
     trim: true,
     minLength: 5,
     maxlength: 50,
   },
+
   description: {
     type: String,
     trim: true,
   },
-  price: { type: Number, required: true, min: 0 },
+
+  price: { 
+    type: Number, 
+    required: true, 
+    min: 0 
+  },
+
   price_type: {
     type: String,
 
@@ -58,8 +67,9 @@ const propertySchema = new mongoose.Schema<TProperty>({
     required: true,
   },
   rooms: {
-    type: number,
+    type: Number,
   },
+
   property_type: {
     type: String,
     required: true,
