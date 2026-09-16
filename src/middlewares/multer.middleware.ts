@@ -5,6 +5,7 @@ import { Request } from "express";
 const uploader = () => {
   //* create upload folder if not exists
   const folder = "uploads/";
+  const fileSize = 5 * 1024 * 1024; // 5MB max file size
   if (!fs.existsSync(folder)) {
     fs.mkdirSync(folder);
   }
@@ -23,7 +24,11 @@ const uploader = () => {
   //* multer upload instance
   const upload = multer({
     storage: storage,
+    limits: {
+        fileSize: fileSize,
+    },
   });
+
   return upload;
 };
 
