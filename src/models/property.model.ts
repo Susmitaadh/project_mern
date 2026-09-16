@@ -1,6 +1,6 @@
 // user;host, name, tyope:enum, rooms, price, description, price_type: [per_hour, per_day], address:{},
 
-// animity model name icon desc, user_id
+// amenity model name icon desc, user_id
 
 // booking: user, property, totalprice, payment_status, checkedin, checkedout
 
