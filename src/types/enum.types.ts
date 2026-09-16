@@ -5,7 +5,7 @@ export enum Role {
 }
 
 //* property price type
-export enum ProprtyPriceType {
+export enum PropertyPriceType {
   "PER_HR" = "per hour",
   "PER_DAY" = "per day",
   "PER_WEEK" = "per week",

@@ -7,56 +7,46 @@
 //review: user, property_id, booking, rating, comment:
 
 import mongoose from "mongoose";
-
-enum PropertyType {
-  Apartment = "Apartment",
-  House = "House",
-  Bungalow = "Bungalow",
-}
+import { PropertyType, PropertyPriceType } from "../types/enum.types";
+import { number } from "zod";
 
 interface TProperty {
-  host: string;
+  host: mongoose.Types.ObjectId;
   name: string;
   description: string;
-  price_type: {
-    amount: number;
-    rate_types: "per_hour" | "per_day" | "per_week" | "per month";
-  }[];
+  price_type: PropertyPriceType;
   address: {
     country: string;
     city: string;
     street_name: string;
     zipcode: string;
   };
-  rooms: string;
+  rooms: number;
   property_type: PropertyType;
 }
 
 const propertySchema = new mongoose.Schema<TProperty>({
   host: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "user",
     required: true,
   },
   name: {
     type: String,
     trim: true,
+    minLength: 5,
+    maxlength: 50,
   },
   description: {
     type: String,
     trim: true,
   },
+  price: { type: Number, required: true, min: 0 },
   price_type: {
-    type: [
-      {
-        amount: { type: Number, required: true, min: 0 },
-        rate_types: {
-          type: String,
-          required: true,
-          enum: ["per_hour", "per_day", "per_week", "per_month"],
-        },
-      },
-    ],
-    required: true,
+    type: String,
+
+    enum: Object.values(PropertyPriceType),
+    default: PropertyPriceType.PER_DAY,
   },
   address: {
     type: {
@@ -68,7 +58,7 @@ const propertySchema = new mongoose.Schema<TProperty>({
     required: true,
   },
   rooms: {
-    type: String,
+    type: number,
   },
   property_type: {
     type: String,
@@ -79,5 +69,3 @@ const propertySchema = new mongoose.Schema<TProperty>({
 
 const Property = mongoose.model<TProperty>("Property", propertySchema);
 export default Property;
-
-
