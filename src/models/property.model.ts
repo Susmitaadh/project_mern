@@ -53,10 +53,10 @@ const propertySchema = new mongoose.Schema<TProperty>({
 
   price_type: {
     type: String,
-
     enum: Object.values(PropertyPriceType),
     default: PropertyPriceType.PER_DAY,
   },
+
   address: {
     type: {
       country: { type: String, required: true },
@@ -66,8 +66,11 @@ const propertySchema = new mongoose.Schema<TProperty>({
     },
     required: true,
   },
+  
   rooms: {
     type: Number,
+    required: true,
+    min: 1,
   },
 
   property_type: {
@@ -75,6 +78,7 @@ const propertySchema = new mongoose.Schema<TProperty>({
     required: true,
     enum: Object.values(PropertyType),
   },
+  // uploads.fields
 });
 
 const Property = mongoose.model<TProperty>("Property", propertySchema);

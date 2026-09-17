@@ -1,13 +1,13 @@
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 import User from "../models/user.model";
 import AppError from "../utils/appError.utils";
 import { comparePassword, hashPassword } from "../utils/bcrypt.utils";
 import { sendResponse } from "../utils/sendResponse.utils";
-import { catachAsync } from "../utils/catchAsync.utils";
+import { catchAsync } from "../utils/catchAsync.utils";
 import { generateJwtToken } from "../utils/jwt.utils";
 
 //* register
-export const register = catachAsync(async (req, res) => {
+export const register = catchAsync(async (req: Request, res: Response) => {
   // console.log(req.body);
   const { full_name, email, password, phone } = req.body;
   const file = req.file;
@@ -53,7 +53,7 @@ export const register = catachAsync(async (req, res) => {
 });
 
 //* login
-export const login = catachAsync(async (req, res) => {
+export const login = catchAsync(async (req, res) => {
   const { email, password } = req.body;
 
   if (!email) throw new AppError("Email is required", 400);
@@ -94,10 +94,8 @@ export const login = catachAsync(async (req, res) => {
 });
 
 //* get profile
-export const getProfile = catachAsync(async (req, res) => {});
+export const getProfile = catchAsync(async (req, res) => {});
 
 //* change password
 
 //* forgot password
-
-//! Aug 20

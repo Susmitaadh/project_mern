@@ -3,12 +3,15 @@ import errorHandler from "./middlewares/errorHandler.middleware";
 
 //* importing routes'
 import authRoutes from "./routes/auth.routes";
+import userRoutes from "./routes/user.routes";
 
 //* express app
 const app = express();
 
 //* using middleware
 app.use(express.json());
+// to store in local server
+app.use("/api/v1/uploads", express.static("uploads"));
 
 //* health route
 app.get("/", (_, res) => {
@@ -22,6 +25,7 @@ app.get("/", (_, res) => {
 
 //* using routes
 app.use("/api/v1/auth", authRoutes); // v1 is api version
+app.use("/api/v1/users", userRoutes);
 
 //* path not found
 app.use((req: Request, _: Response, next: NextFunction) => {
