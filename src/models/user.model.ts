@@ -1,14 +1,14 @@
 import mongoose, { Document } from "mongoose";
 import { Role } from "../types/enum.types";
-
-
+import imageSchema from "./image.model";
+import { IImage } from "../types/global.types";
 
 //* interface
 interface IUserDocument extends Document {
   full_name: string;
   email: string;
   password: string;
-  profile_image?: string;
+  profile_image?: IImage;
   phone?: string;
   role: Role;
 }
@@ -22,33 +22,38 @@ const userSchema = new mongoose.Schema<IUserDocument>(
       minLength: [3, "Full name must be at least 2 characters long"],
       trim: true,
     },
+
     email: {
       type: String,
       unique: [true, "User already exists with provided email"],
       required: [true, "Email is required"],
     },
+
     password: {
       type: String,
       required: [true, "Password is required"],
       select: false,
     },
+
     role: {
       type: String,
       enum: Object.values(Role), // ['USER','ADMIN']
       default: Role.USER,
     },
+
     profile_image: {
-      type: String,
+      type: imageSchema,
       default: null,
     },
+
     phone: {
       type: String,
       default: null,
-      trim: true,   
+      trim: true,
     },
   },
   { timestamps: true },
-); 
+);
 
 //* user model
 const User = mongoose.model<IUserDocument>("user", userSchema);

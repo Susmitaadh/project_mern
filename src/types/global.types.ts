@@ -5,3 +5,8 @@ export type TResponseCode =
   | "UNAUTHORIZED"
   | "FORBIDDEN"
   | "NOT_FOUND";
+
+export interface IImage {
+  path: string;
+  public_id: string;
+}

@@ -1,9 +1,11 @@
 import mongoose from "mongoose";
+import imageSchema from "./image.model";
+import { IImage } from "../types/global.types";
 
 interface IAmenityDocument extends Document {
   name: string;
   description: string;
-  logo: string;
+  logo: IImage;
   user: mongoose.Types.ObjectId;
 }
 
@@ -25,7 +27,7 @@ const amenitySchema = new mongoose.Schema<IAmenityDocument>(
     },
 
     logo: {
-      type: String,
+      type: imageSchema,
       required: [true, "Logo is required"],
     },
 
