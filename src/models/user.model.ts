@@ -4,7 +4,7 @@ import imageSchema from "./image.model";
 import { IImage } from "../types/global.types";
 
 //* interface
-interface IUserDocument extends Document {
+export interface IUserDocument extends Document {
   full_name: string;
   email: string;
   password: string;

@@ -6,6 +6,7 @@ import { sendResponse } from "../utils/sendResponse.utils";
 import { catchAsync } from "../utils/catchAsync.utils";
 import { generateJwtToken } from "../utils/jwt.utils";
 import { uploadFileToCloudinary } from "../utils/cloudinary.utils";
+import ENV_CONFIG from "../config/env.config";
 
 //* register
 export const register = catchAsync(async (req: Request, res: Response) => {
@@ -37,7 +38,7 @@ export const register = catchAsync(async (req: Request, res: Response) => {
   //todo: upload profile image
   if (file) {
     // user.profile_image = file?.path;
-    
+
     //* upload file to cloudinary
     const { path, public_id } = await uploadFileToCloudinary(file, folder);
     user.profile_image = {
@@ -87,6 +88,16 @@ export const login = catchAsync(async (req, res) => {
     role: user.role,
   });
 
+  //* cookie
+  res.cookie("access_token", access_token, {
+    httpOnly: ENV_CONFIG.NODE_ENV === "development" ? false : true,
+    secure: ENV_CONFIG.NODE_ENV === "development" ? false : true,
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+    sameSite: ENV_CONFIG.NODE_ENV === "development" ? "lax" : "strict",
+  });
+
+  // res.cookie("abc", "abc");
+
   //* convert user mongoose doc to js object
   const { password: _, ...rest } = user.toObject();
 
@@ -96,7 +107,7 @@ export const login = catchAsync(async (req, res) => {
     statusCode: 201,
     data: {
       user: rest,
-      access_token,
+      // access_token,
     },
   });
 });

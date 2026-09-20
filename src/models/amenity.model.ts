@@ -1,12 +1,13 @@
 import mongoose from "mongoose";
 import imageSchema from "./image.model";
 import { IImage } from "../types/global.types";
+import { IUserDocument } from "./user.model";
 
 interface IAmenityDocument extends Document {
   name: string;
   description: string;
   logo: IImage;
-  user: mongoose.Types.ObjectId;
+  user: mongoose.Types.ObjectId | IUserDocument;
 }
 
 const amenitySchema = new mongoose.Schema<IAmenityDocument>(

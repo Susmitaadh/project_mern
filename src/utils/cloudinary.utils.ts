@@ -35,7 +35,7 @@ export const uploadFileToCloudinary = async (
   } catch (error: any) {
     console.log(error);
     throw new AppError("Something went wrong", 500, "INTERNAL_SERVER_ERROR", [
-      { message: error.message },
+      { message: error?.message },
     ]);
   }
 };
