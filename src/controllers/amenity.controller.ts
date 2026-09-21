@@ -73,7 +73,7 @@ export const update = catchAsync(async (req: Request, res: Response) => {
   if (!amenity) throw new AppError("Amenity not found", 404, "NOT_FOUND");
 
   //* only admin and owner can update
-  if (user.role !== Role.ADMIN || amenity.user._id !== user._id) {
+  if (user.role !== Role.ADMIN && amenity.user._id !== user._id) {
     throw new AppError("Only admin or owner can update this resource", 400);
   }
 
@@ -112,7 +112,7 @@ export const remove = catchAsync(async (req: Request, res: Response) => {
   if (!amenity) throw new AppError("Amenity not found", 404, "NOT_FOUND");
 
   //* only admin and owner can delete
-  if (user.role !== Role.ADMIN || amenity.user._id !== user._id) {
+  if (user.role !== Role.ADMIN && amenity.user._id !== user._id) {
     throw new AppError("Only admin or owner can delete this resource", 400);
   } 
 
@@ -125,7 +125,7 @@ export const remove = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     message: "Amenity deleted successfully",
     statusCode: 200,
-    data: amenity,
+    data: null,
   });
 });
 

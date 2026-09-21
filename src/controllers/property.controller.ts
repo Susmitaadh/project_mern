@@ -2,14 +2,39 @@ import { Request, Response } from "express";
 import { catchAsync } from "../utils/catchAsync.utils";
 import AppError from "../utils/appError.utils";
 import Property from "../models/property.model";
-import { uploadFileToCloudinary } from "../utils/cloudinary.utils";
+import {
+  deleteFileFromCloudinary,
+  uploadFileToCloudinary,
+} from "../utils/cloudinary.utils";
 import { sendResponse } from "../utils/sendResponse.utils";
+import { Role } from "../types/enum.types";
 
 const folder = "/properties";
 
 //* get all
+export const getAll = catchAsync(async (req, res) => {
+  const properties = await Property.find();
+
+  sendResponse(res, {
+    message: "All properties fetched",
+    data: properties,
+    statusCode: 200,
+  });
+});
 
 //* get by id
+export const getById = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const property = await Property.find({ _id: id });
+
+  if (!property) throw new AppError("property not found", 200);
+
+  sendResponse(res, {
+    message: "Properties fetched",
+    data: property,
+    statusCode: 200,
+  });
+});
 
 //* create
 export const create = catchAsync(async (req: Request, res: Response) => {
@@ -64,10 +89,10 @@ export const create = catchAsync(async (req: Request, res: Response) => {
   const promises = images.map((file) => uploadFileToCloudinary(file, folder));
   const results = await Promise.allSettled(promises);
   const files = results
-  .filter((file) => file.status === 'fulfilled')
-  .map((file) => {
-    return file.value;
-  });
+    .filter((file) => file.status === "fulfilled")
+    .map((file) => {
+      return file.value;
+    });
 
   property.images = files;
 
@@ -80,8 +105,44 @@ export const create = catchAsync(async (req: Request, res: Response) => {
     data: property,
   });
 });
+
 //* update
 
 //* remove
+export const remove = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const user = req.user;
+  const property = await Property.findById(id).populate("host");
+
+  if (!property) throw new AppError("property not found", 200);
+
+  //* only admin and owner can delete
+  if (user.role !== Role.ADMIN && property.host._id !== user._id) {
+    throw new AppError("Only admin or owner can delete this resource", 400);
+  }
+
+  await deleteFileFromCloudinary(property.cover_image.public_id);
+  await Promise.allSettled(
+    property.images.map((file) => deleteFileFromCloudinary(file.public_id)),
+  );
+
+  await property.deleteOne();
+
+  sendResponse(res, {
+    message: "Properties deleted",
+    data: property,
+    statusCode: 200,
+  });
+});
 
 //* get by host id
+export const getByHost = catchAsync(async (req, res) => {
+  const user = req.user._id;
+  const property = await Property.find({ host: user });
+
+  sendResponse(res, {
+    message: "Properties fetched",
+    data: property,
+    statusCode: 200,
+  });
+});
