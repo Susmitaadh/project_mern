@@ -6,6 +6,7 @@ import cookieParser from "cookie-parser";
 import authRoutes from "./routes/auth.routes";
 import userRoutes from "./routes/user.routes";
 import amenityRoutes from "./routes/amenity.routes";
+import propertyRoutes from "./routes/property.routes";
 
 //* express app
 const app = express();
@@ -30,6 +31,7 @@ app.get("/", (_, res) => {
 app.use("/api/v1/auth", authRoutes); // v1 is api version
 app.use("/api/v1/users", userRoutes);
 app.use("api/v1/amenities", amenityRoutes);
+app.use("api/v1/properties", propertyRoutes);
 
 //* path not found
 app.use((req: Request, _: Response, next: NextFunction) => {

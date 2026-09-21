@@ -7,11 +7,12 @@ import { catchAsync } from "../utils/catchAsync.utils";
 import { generateJwtToken } from "../utils/jwt.utils";
 import { uploadFileToCloudinary } from "../utils/cloudinary.utils";
 import ENV_CONFIG from "../config/env.config";
+import { Role } from "../types/enum.types";
 
 //* register
 export const register = catchAsync(async (req: Request, res: Response) => {
   // console.log(req.body);
-  const { full_name, email, password, phone } = req.body;
+  const { full_name, email, password, phone, host= false } = req.body;
   const file = req.file;
   console.log(file);
 
@@ -35,7 +36,11 @@ export const register = catchAsync(async (req: Request, res: Response) => {
   const hash = await hashPassword(password);
   user.password = hash;
 
-  //todo: upload profile image
+  if (host) {
+    user.role = Role.HOST;
+  }
+
+  //* upload profile image
   if (file) {
     // user.profile_image = file?.path;
 

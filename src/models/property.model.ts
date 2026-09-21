@@ -21,69 +21,72 @@ interface TProperty {
   images: IImage[];
 }
 
-const propertySchema = new mongoose.Schema<TProperty>({
-  host: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "user",
-    required: true,
-  },
-
-  name: {
-    type: String,
-    trim: true,
-    minLength: 5,
-    maxlength: 50,
-  },
-
-  description: {
-    type: String,
-    trim: true,
-  },
-
-  price: {
-    type: Number,
-    required: true,
-    min: 0,
-  },
-
-  price_type: {
-    type: String,
-    enum: Object.values(PropertyPriceType),
-    default: PropertyPriceType.PER_DAY,
-  },
-
-  address: {
-    type: {
-      country: { type: String, required: true },
-      city: { type: String, required: true },
-      street_name: { type: String, required: true },
-      zipcode: { type: String, required: true },
+const propertySchema = new mongoose.Schema<TProperty>(
+  {
+    host: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "user",
+      required: true,
     },
-    required: true,
-  },
 
-  rooms: {
-    type: Number,
-    required: true,
-    min: 1,
-  },
+    name: {
+      type: String,
+      trim: true,
+      minLength: 5,
+      maxlength: 50,
+    },
 
-  property_type: {
-    type: String,
-    required: true,
-    enum: Object.values(PropertyType),
-  },
+    description: {
+      type: String,
+      trim: true,
+    },
 
-  cover_image: {
-    type: imageSchema,
-    required: [true, "Cover image is required"],
-  },
+    price: {
+      type: Number,
+      required: true,
+      min: 0,
+    },
 
-  images: {
-    type: [imageSchema],
-    required: [true, "Images is required"],
+    price_type: {
+      type: String,
+      enum: Object.values(PropertyPriceType),
+      default: PropertyPriceType.PER_DAY,
+    },
+
+    address: {
+      type: {
+        country: { type: String, required: true },
+        city: { type: String, required: true },
+        street_name: { type: String, required: true },
+        zipcode: { type: String, required: true },
+      },
+      required: true,
+    },
+
+    rooms: {
+      type: Number,
+      required: true,
+      min: 1,
+    },
+
+    property_type: {
+      type: String,
+      required: true,
+      enum: Object.values(PropertyType),
+    },
+
+    cover_image: {
+      type: imageSchema,
+      required: [true, "Cover image is required"],
+    },
+
+    images: {
+      type: [imageSchema],
+      required: [true, "Images is required"],
+    },
   },
-});
+  { timestamps: true },
+);
 
 const Property = mongoose.model<TProperty>("Property", propertySchema);
 export default Property;
