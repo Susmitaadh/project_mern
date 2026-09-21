@@ -3,7 +3,7 @@ import { Role } from "../types/enum.types";
 import jwt from "jsonwebtoken";
 import ENV_CONFIG from "../config/env.config";
 
-type TJwtPayload = {
+export type TJwtPayload = {
   _id: mongoose.Types.ObjectId;
   role: Role;
   email: string;

@@ -113,7 +113,18 @@ export const login = catchAsync(async (req, res) => {
 });
 
 //* get profile
-export const getProfile = catchAsync(async (req, res) => {});
+export const getProfile = catchAsync(async (req, res) => {
+  const { _id } = req.user;
+  const profile = await User.findOne({ _id });
+
+  if (!profile) throw new AppError("something went wrong", 500);
+
+  sendResponse(res, {
+    message: "Profile fetched",
+    data: profile,
+    statusCode: 200,
+  });
+});
 
 //* change password
 
