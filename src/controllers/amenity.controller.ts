@@ -7,6 +7,7 @@ import {
   deleteFileFromCloudinary,
   uploadFileToCloudinary,
 } from "../utils/cloudinary.utils";
+import { Role } from "../types/enum.types";
 
 const folder = "/amenities";
 
@@ -63,12 +64,18 @@ export const create = catchAsync(async (req: Request, res: Response) => {
 
 export const update = catchAsync(async (req: Request, res: Response) => {
   const id = req.params.id;
-  const { name, description, user } = req.body;
+  const { name, description } = req.body;
+  const user = req.user;
   const file = req.file;
 
-  const amenity = await Amenity.findOne({ _id: id, user });
+  const amenity = await Amenity.findOne({ _id: id });
 
   if (!amenity) throw new AppError("Amenity not found", 404, "NOT_FOUND");
+
+  //* only admin and owner can update
+  if (user.role !== Role.ADMIN || amenity.user._id !== user._id) {
+    throw new AppError("Only admin or owner can update this resource", 400);
+  }
 
   if (name) amenity.name = name;
   if (!description) amenity.description = description;
@@ -98,14 +105,16 @@ export const update = catchAsync(async (req: Request, res: Response) => {
 
 export const remove = catchAsync(async (req: Request, res: Response) => {
   const id = req.params.id;
-  const { user } = req.body;
+  const user = req.user;
 
   const amenity = await Amenity.findOne({ _id: id }).populate("user");
 
-  if (!amenity) throw new AppError("Amenity ot found", 404, "NOT_FOUND");
+  if (!amenity) throw new AppError("Amenity not found", 404, "NOT_FOUND");
 
-  //* amenity.user !== user || amenity.user.role !== ADMIN -> throw error
-  console.log(amenity.user.role);
+  //* only admin and owner can delete
+  if (user.role !== Role.ADMIN || amenity.user._id !== user._id) {
+    throw new AppError("Only admin or owner can delete this resource", 400);
+  } 
 
   //* delete logo from cloudinary
   await deleteFileFromCloudinary(amenity.logo.public_id);

@@ -1,14 +1,7 @@
-// user;host, name, tyope:enum, rooms, price, description, price_type: [per_hour, per_day], address:{},
-
-// amenity model name icon desc, user_id
-
-// booking: user, property, totalprice, payment_status, checkedin, checkedout
-
-//review: user, property_id, booking, rating, comment:
-
 import mongoose from "mongoose";
 import { PropertyType, PropertyPriceType } from "../types/enum.types";
-import { number } from "zod";
+import { IImage } from "../types/global.types";
+import imageSchema from "./image.model";
 
 interface TProperty {
   host: mongoose.Types.ObjectId;
@@ -24,6 +17,8 @@ interface TProperty {
   };
   rooms: number;
   property_type: PropertyType;
+  cover_image: IImage;
+  images: IImage[];
 }
 
 const propertySchema = new mongoose.Schema<TProperty>({
@@ -45,10 +40,10 @@ const propertySchema = new mongoose.Schema<TProperty>({
     trim: true,
   },
 
-  price: { 
-    type: Number, 
-    required: true, 
-    min: 0 
+  price: {
+    type: Number,
+    required: true,
+    min: 0,
   },
 
   price_type: {
@@ -66,7 +61,7 @@ const propertySchema = new mongoose.Schema<TProperty>({
     },
     required: true,
   },
-  
+
   rooms: {
     type: Number,
     required: true,
@@ -78,7 +73,16 @@ const propertySchema = new mongoose.Schema<TProperty>({
     required: true,
     enum: Object.values(PropertyType),
   },
-  // uploads.fields
+
+  cover_image: {
+    type: imageSchema,
+    required: [true, "Cover image is required"],
+  },
+
+  images: {
+    type: [imageSchema],
+    required: [true, "Images is required"],
+  },
 });
 
 const Property = mongoose.model<TProperty>("Property", propertySchema);
