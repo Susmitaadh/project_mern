@@ -252,7 +252,166 @@ export const generateNewLoginDetectedHtml = ({
   loggedIn_at: NativeDate;
   agent: string;
 }) => {
-  const html = ``;
+  const html = `
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>New Login Detected</title>
+      </head>
+      <body style="
+        margin: 0;
+        padding: 0;
+        background-color: #f5f3ff;
+        font-family: Arial, Helvetica, sans-serif;
+        color: #1f2937;
+      ">
+        <table
+          width="100%"
+          cellpadding="0"
+          cellspacing="0"
+          role="presentation"
+          style="background-color: #f5f3ff; padding: 40px 0;"
+        >
+          <tr>
+            <td align="center">
+              <table
+                width="600"
+                cellpadding="0"
+                cellspacing="0"
+                role="presentation"
+                style="
+                  max-width: 600px;
+                  width: 100%;
+                  background-color: #ffffff;
+                  border-radius: 12px;
+                  overflow: hidden;
+                "
+              >
+                <!-- Header -->
+                <tr>
+                  <td style="
+                    background-color: #6d28d9;
+                    padding: 30px;
+                    text-align: center;
+                    color: #ffffff;
+                  ">
+                    <h1 style="
+                      margin: 0;
+                      font-size: 26px;
+                    ">
+                      New Login Detected
+                    </h1>
+                  </td>
+                </tr>
+
+                <!-- Content -->
+                <tr>
+                  <td style="padding: 35px 30px;">
+                    <h2 style="
+                      margin-top: 0;
+                      font-size: 22px;
+                      color: #4c1d95;
+                    ">
+                      Hello ${full_name},
+                    </h2>
+
+                    <p style="
+                      font-size: 15px;
+                      line-height: 1.7;
+                      color: #4b5563;
+                    ">
+                      We noticed a new login to your account.
+                      Here are the details:
+                    </p>
+
+                    <!-- Login Details -->
+                    <table
+                      width="100%"
+                      cellpadding="0"
+                      cellspacing="0"
+                      role="presentation"
+                      style="
+                        background-color: #f5f3ff;
+                        border-radius: 8px;
+                        padding: 20px;
+                        margin: 20px 0;
+                      "
+                    >
+                      <tr>
+                        <td style="padding: 8px 0; font-size: 14px;">
+                          <strong style="color: #6d28d9;">Email:</strong>
+                          <span>${email}</span>
+                        </td>
+                      </tr>
+
+                      <tr>
+                        <td style="padding: 8px 0; font-size: 14px;">
+                          <strong style="color: #6d28d9;">Login Time:</strong>
+                          <span>${formatDate(loggedIn_at)}</span>
+                        </td>
+                      </tr>
+
+                      <tr>
+                        <td style="padding: 8px 0; font-size: 14px;">
+                          <strong style="color: #6d28d9;">Device / Browser:</strong>
+                          <span>${agent}</span>
+                        </td>
+                      </tr>
+                    </table>
+
+                    <p style="
+                      font-size: 15px;
+                      line-height: 1.7;
+                      color: #4b5563;
+                    ">
+                      If this was you, no further action is needed.
+                    </p>
+
+                    <p style="
+                      font-size: 15px;
+                      line-height: 1.7;
+                      color: #4b5563;
+                    ">
+                      If you don't recognize this activity, please
+                      change your password immediately and secure
+                      your account.
+                    </p>
+
+                    <p style="
+                      margin-top: 30px;
+                      font-size: 15px;
+                      color: #4b5563;
+                    ">
+                      Stay safe,<br />
+                      <strong style="color: #6d28d9;">
+                        The Security Team
+                      </strong>
+                    </p>
+                  </td>
+                </tr>
+
+                <!-- Footer -->
+                <tr>
+                  <td style="
+                    background-color: #faf5ff;
+                    padding: 20px;
+                    text-align: center;
+                    font-size: 12px;
+                    color: #6b7280;
+                  ">
+                    This is an automated security notification.
+                    Please do not reply to this email.
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+      </body>
+    </html>
+  `;
+
   return html;
 };
-

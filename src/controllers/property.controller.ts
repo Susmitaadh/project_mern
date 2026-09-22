@@ -10,14 +10,77 @@ import { sendResponse } from "../utils/sendResponse.utils";
 import { Role } from "../types/enum.types";
 
 const folder = "/properties";
-
+//? 100
+// perPage: 10, page:1 data: 10 skip: 0 remain: 90
+// perPage: 10, page:2 data: 10 skip: 10 remain: 80
+// perPage: 10, page:3 data: 10 skip: 20 remain: 80
 //* get all
 export const getAll = catchAsync(async (req, res) => {
-  const properties = await Property.find();
+  const filter: any = {};
+
+  const { query, minPrice, maxPrice, page = 1, limit = 10 } = req.query;
+  const perPage = Number(limit);
+  const currentPage = Number(page);
+  const skip = (currentPage - 1) * perPage;
+
+  if (query) {
+    filter.$or = [
+      {
+        name: {
+          $regex: query,
+          $options: "i", // abc -> ABC
+        },
+      },
+      {
+        description: {
+          $regex: query,
+          $options: "i",
+        },
+      },
+    ];
+  }
+
+  //* price range
+  if (minPrice || maxPrice) {
+    const floor = Number(minPrice);
+    const ceil = Number(maxPrice);
+
+    if (floor) {
+      filter.price = {
+        $gte: floor,
+      };
+    }
+
+    if (ceil) {
+      filter.price = {
+        $lte: ceil,
+      };
+    }
+
+    if (floor && ceil) {
+      filter.price = {
+        $gte: floor,
+        $lte: ceil,
+      };
+    }
+  }
+
+  const properties = await Property.find(filter).limit(perPage).skip(skip);
+
+  const total = await Property.countDocuments(filter);
+  const totalPages = Math.ceil(total / perPage);
+  const pagination = {
+    page: currentPage,
+    limit: perPage,
+    totalPages: totalPages,
+    total: total,
+    nextPage: currentPage < totalPages ? currentPage + 1 : null,
+    prevPage: currentPage > 1 ? currentPage - 1 : null,
+  };
 
   sendResponse(res, {
     message: "All properties fetched",
-    data: properties,
+    data: { properties, pagination },
     statusCode: 200,
   });
 });
@@ -155,3 +218,5 @@ export const getByHost = catchAsync(async (req, res) => {
     statusCode: 200,
   });
 });
+
+//! Sep 9
