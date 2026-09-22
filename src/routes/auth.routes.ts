@@ -1,5 +1,5 @@
 import express from "express";
-import { getProfile, login, register } from "../controllers/auth.controller";
+import { changePassword, getProfile, login, register } from "../controllers/auth.controller";
 import { validate } from "../middlewares/validator.middleware";
 import { loginValidator } from "../validators/auth.validator";
 import uploader from "../middlewares/multer.middleware";
@@ -18,6 +18,7 @@ router.post("/login", validate(loginValidator), login);
 router.get('/profile', authenticate(), getProfile);
 
 //* change password
+router.put('/password', authenticate(), changePassword);
 
 //* change profile image
 

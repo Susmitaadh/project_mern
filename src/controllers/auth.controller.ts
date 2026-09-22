@@ -160,5 +160,42 @@ export const getProfile = catchAsync(async (req, res) => {
 });
 
 //* change password
+export const changePassword = catchAsync(async(req, res) => {
+  const { _id, email } = req.user;
+  const { old_password, new_password} = req.body;
+
+  const user = await User.findById({ _id, email }).select("+password");
+
+  if (!user) {
+    throw new AppError("User not found", 400);
+  }
+
+  const isPassMatched = await comparePassword(old_password, user.password);
+
+  if (!isPassMatched) {
+    throw new AppError('Password does not matched', 400);
+  }
+
+  const isNewPassMatchedOld = await comparePassword(new_password,
+    user.password,
+  );
+
+  if (!isNewPassMatchedOld) {
+    throw new AppError(
+      "New password must be different from current password", 400,
+    );
+  }
+
+  const hash = await hashPassword(new_password);
+  user.password = hash;
+
+  await user.save();
+
+  sendResponse(res, {
+    message: "Password changed",
+    data: null,
+    statusCode: 200,
+  })
+});
 
 //* forgot password
