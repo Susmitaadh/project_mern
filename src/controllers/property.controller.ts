@@ -107,6 +107,12 @@ export const create = catchAsync(async (req: Request, res: Response) => {
 });
 
 //* update
+// deleted_image: [public_id, public_id]
+export const update = catchAsync(async (req, res) => {
+  //* params
+  //* body
+  //* req.user
+});
 
 //* remove
 export const remove = catchAsync(async (req, res) => {
@@ -117,7 +123,10 @@ export const remove = catchAsync(async (req, res) => {
   if (!property) throw new AppError("property not found", 200);
 
   //* only admin and owner can delete
-  if (user.role !== Role.ADMIN && property.host._id !== user._id) {
+  if (
+    user.role !== Role.ADMIN &&
+    property.host.toString() !== user._id.toString()
+  ) {
     throw new AppError("Only admin or owner can delete this resource", 400);
   }
 
