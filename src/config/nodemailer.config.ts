@@ -12,6 +12,15 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+export const verifySmtpServer = async () => {
+  try {
+    await transporter.verify();
+    console.log("server is ready to send an email");
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export default transporter;
 
-//! Sep 3rd 34:00
+
