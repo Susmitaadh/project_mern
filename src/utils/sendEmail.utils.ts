@@ -1,17 +1,42 @@
 import ENV_CONFIG from "../config/env.config";
 import transporter from "../config/nodemailer.config";
 
-export const sendEmail = async () => {
+interface IMailOption {
+  to: string | string[];
+  subject: string;
+  html: string;
+  cc?: string | string[];
+  bcc?: string | string[];
+  attachemnts?: any[];
+}
+
+export const sendEmail = async ({
+  to,
+  subject,
+  html,
+  cc,
+  bcc,
+  attachemnts,
+}: IMailOption) => {
+  const options: MailOptions = {
+    to,
+    from: ENV_CONFIG.SMTP_MAIL_FROM,
+
+    subject,
+    html,
+  };
+  if (cc) {
+    options["cc"] = cc;
+  }
+  if (bcc) {
+    options["bcc"] = bcc;
+  }
+  if (attachemnts) {
+    options["attachments"] = attachemnts;
+  }
+
   try {
-    await transporter.sendMail({
-      to: "susmita4jun@gmail.com",
-      from: ENV_CONFIG.SMTP_MAIL_FROM,
-      // text: "hello",
-      html: `<div>
-            <h1>Smtp Server testing</h1>
-            </div>`,
-      subject: "Testing mail server",
-    });
+    await transporter.sendMail(options);
     console.log("Email sent");
   } catch (error) {
     console.log(error);

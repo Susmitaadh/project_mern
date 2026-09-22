@@ -12,9 +12,8 @@ import { Role } from "../types/enum.types";
 //* register
 export const register = catchAsync(async (req: Request, res: Response) => {
   // console.log(req.body);
-  const { full_name, email, password, phone, host= false } = req.body;
+  const { full_name, email, password, phone, host = false } = req.body;
   const file = req.file;
-  console.log(file);
 
   if (!full_name) {
     //   const error: any = new Error("Full name is required");

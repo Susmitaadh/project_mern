@@ -1,3 +1,4 @@
+// property, status: pending completed, payment_status
 import mongoose from "mongoose";
 
 interface TBooking {
