@@ -8,6 +8,11 @@ import { generateJwtToken } from "../utils/jwt.utils";
 import { uploadFileToCloudinary } from "../utils/cloudinary.utils";
 import ENV_CONFIG from "../config/env.config";
 import { Role } from "../types/enum.types";
+import { sendEmail } from "../utils/sendEmail.utils";
+import {
+  generateAccountCreatedHtml,
+  generateNewLoginDetectedHtml,
+} from "../utils/emailtemplate.utils";
 
 //* register
 export const register = catchAsync(async (req: Request, res: Response) => {
@@ -53,6 +58,18 @@ export const register = catchAsync(async (req: Request, res: Response) => {
 
   //* save user
   await user.save();
+
+  //* send email
+  sendEmail({
+    to: user.email,
+    subject: "Account created",
+    html: generateAccountCreatedHtml({
+      email: user.email,
+      full_name: user.full_name,
+      created_at: new Date(Date.now()),
+      agent: req.headers["user-agent"] ?? "unknown",
+    }),
+  });
 
   //* convert user mongoose doc to js object
   const { password: _, ...rest } = user.toObject();
@@ -101,6 +118,18 @@ export const login = catchAsync(async (req, res) => {
   });
 
   // res.cookie("abc", "abc");
+
+  //* send new login email
+  sendEmail({
+    to: user.email,
+    subject: "New Login Detected",
+    html: generateNewLoginDetectedHtml({
+      email: user.email,
+      full_name: user.full_name,
+      loggedIn_at: new Date(Date.now()),
+      agent: req.headers["user-agent"] ?? "unknown",
+    }),
+  });
 
   //* convert user mongoose doc to js object
   const { password: _, ...rest } = user.toObject();

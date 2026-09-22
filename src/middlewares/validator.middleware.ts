@@ -7,7 +7,7 @@ export const validate = (schema: ZodObject) => {
     const result = schema.safeParse({
       body: {
         ...req.body,
-        address: JSON.parse(req.body.address),
+        address: JSON.parse(req.body.address ?? "{}"),
       },
       params: req.params,
       query: req.query,

@@ -17,6 +17,6 @@ connectDatabase(DB_URI);
 //* server listen
 server.listen(PORT, () => {
   console.log(`Server is running at http://localhost:${PORT}`);
-  sendEmail();
+  
   verifySmtpServer();
 });

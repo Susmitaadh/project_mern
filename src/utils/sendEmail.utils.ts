@@ -1,5 +1,6 @@
 import ENV_CONFIG from "../config/env.config";
 import transporter from "../config/nodemailer.config";
+import { MailOptions } from "nodemailer/lib/json-transport";
 
 interface IMailOption {
   to: string | string[];
@@ -21,7 +22,6 @@ export const sendEmail = async ({
   const options: MailOptions = {
     to,
     from: ENV_CONFIG.SMTP_MAIL_FROM,
-
     subject,
     html,
   };
